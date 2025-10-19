@@ -1,0 +1,23 @@
+{
+  "name": "guestbook",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"npm run dev --workspace=apps/backend\" \"npm run dev --workspace=apps/frontend\"",
+    "build": "npm run build --workspace=apps/backend && npm run build --workspace=apps/frontend",
+    "prisma:migrate": "npm run prisma:migrate --workspace=apps/backend",
+    "prisma:reset": "npm run prisma:reset --workspace=apps/backend",
+    "prisma:deploy": "npm run prisma:deploy --workspace=apps/backend",
+    "prisma:generate": "npm run prisma:generate --workspace=apps/backend"
+  },
+  "author": "Muhammad Insan Kamil",
+  "license": "ISC",
+  "description": "Guestbook monorepo",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

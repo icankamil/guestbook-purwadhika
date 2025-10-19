@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: ["staging"]
+  pull_request:
+    branches: ["staging"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      # Sediakan service Postgres untuk 'prisma generate'
+      postgres:
+        image: postgres:16-alpine
+        ports:
+          - 5432:5432
+        environment:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: test_db
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies (Root)
+        run: npm install
+
+      - name: Build Backend
+        env:
+          DATABASE_URL: "postgresql://user:password@localhost:5432/test_db"
+        run: npm run build --workspace=apps/backend
+
+      - name: Build Frontend
+        env:
+          INTERNAL_API_URL: "http://dummy-url.com"
+        run: npm run build --workspace=apps/frontend
